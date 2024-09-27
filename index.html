@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Shooter</title>
+
+    <!-- Link to the Google Font (Press Start 2P) -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <!-- Load Phaser library -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+</head>
+<body>
+    <!-- Load Firebase configuration and functions -->
+    <script type="module" src="firebase/firebase.js"></script> <!-- Combined Firebase Config and Functions -->
+
+    <!-------------------------- SCREENS ------------------------------>
+
+    <script type="module" src="screens/HomeScreen.js"></script> <!-- HomeScreen JS -->
+    <script type="module" src="screens/MainGame.js"></script> <!-- MainGame JS -->
+    <script type="module" src="screens/InfoScreen.js"></script> <!-- InfoScreen JS -->
+    <script type="module" src="screens/GameOverScreen.js"></script> <!-- GameOverScreen JS -->
+    <script type="module" src="screens/QuestionScreen.js"></script> <!-- QuestionScreen JS -->
+
+    <script type="module" src="main.js"></script> <!-- Main JS -->
+</body>
+</html>
