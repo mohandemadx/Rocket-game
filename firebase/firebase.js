@@ -3,7 +3,6 @@ import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9
 
 // Your Firebase configuration
 const firebaseConfig = {
-    
 };
 
 // Initialize Firebase
