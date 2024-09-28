@@ -3,13 +3,7 @@ import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9
 
 // Your Firebase configuration
 const firebaseConfig = {
-    apiKey: "ADD YOUR API",
-    authDomain: "scope-7189c.firebaseapp.com",
-    databaseURL: "https://scope-7189c-default-rtdb.firebaseio.com",
-    projectId: "scope-7189c",
-    storageBucket: "scope-7189c.appspot.com",
-    messagingSenderId: "696247136473",
-    appId: "1:696247136473:web:ef2400d62305a938320ec8"
+    
 };
 
 // Initialize Firebase
