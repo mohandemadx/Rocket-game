@@ -8,7 +8,7 @@ class GameOverScreen extends Phaser.Scene {
     preload() {
         // Load button assets
         this.load.image('restartButton', 'assets/restart.png'); // Add your asset path
-        this.load.image('homeButton', 'assets/pause.png'); // Add your asset path
+        this.load.image('homeButton', 'assets/home.png'); // Add your asset path
     }
 
     create() {
