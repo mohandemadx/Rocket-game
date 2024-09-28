@@ -156,10 +156,49 @@ class MainGame extends Phaser.Scene {
     setupControls() {
         // Enable input for keyboard controls
         this.cursors = this.input.keyboard.createCursorKeys();
-
+    
         // Spacebar to shoot
         this.input.keyboard.on('keydown-SPACE', this.shoot, this);
-    }
+    
+        // Touch controls for mobile
+        this.leftButton = this.add.text(50, this.game.config.height - 100, '←', {
+            fontSize: '32px',
+            fill: '#fff',
+            backgroundColor: '#000'
+        }).setInteractive();
+    
+        this.rightButton = this.add.text(150, this.game.config.height - 100, '→', {
+            fontSize: '32px',
+            fill: '#fff',
+            backgroundColor: '#000'
+        }).setInteractive();
+    
+        this.shootButton = this.add.text(this.game.config.width - 100, this.game.config.height - 100, 'Shoot', {
+            fontSize: '32px',
+            fill: '#fff',
+            backgroundColor: '#000'
+        }).setInteractive();
+    
+        // Touch events for movement
+        this.leftButton.on('pointerdown', () => {
+            this.spaceship.setVelocityX(-500);
+        });
+    
+        this.rightButton.on('pointerdown', () => {
+            this.spaceship.setVelocityX(500);
+        });
+    
+        this.leftButton.on('pointerup', () => {
+            this.spaceship.setVelocityX(0);
+        });
+    
+        this.rightButton.on('pointerup', () => {
+            this.spaceship.setVelocityX(0);
+        });
+    
+        // Touch event for shooting
+        this.shootButton.on('pointerdown', this.shoot, this);
+    }    
 
     createPauseMenu() {
         this.pauseText = this.add.text(
@@ -213,6 +252,7 @@ class MainGame extends Phaser.Scene {
         }
         else{
             // logic for Game TYPE 2
+            this.scene.start('MainGame2');
         }
     }
 
