@@ -46,9 +46,9 @@ class InfoScreen extends Phaser.Scene {
 
     createTextDisplay() {
         this.textArray = [
-            "Welcome to Space Shooter!",
+            "Welcome to Envo Rockets!",
             "Use left and right arrow keys to move.",
-            "Press the spacebar to shoot the planets.",
+            "Press the spacebar to shoot.",
             "Good luck and have fun!"
         ];
 
@@ -59,7 +59,8 @@ class InfoScreen extends Phaser.Scene {
             fontSize: '32px',
             color: '#ffffff',
             wordWrap: { width: 550, useAdvancedWrap: true },
-            align: 'center'
+            align: 'center',
+            lineSpacing: 3,
         });
 
         this.textDisplay.setOrigin(0.5, 0.5);  // Centered in both directions
@@ -74,16 +75,16 @@ class InfoScreen extends Phaser.Scene {
         this.nextButton = this.add.image(windowX, windowY + (windowHeight / 2) - 100, 'nextButton')
             .setOrigin(0.5) // Center the image
             .setInteractive()
-            .setDisplaySize(200, 100) // Scale down to desired size (adjust as necessary)
+            .setScale(0.35); // Scale down to desired size (adjust as necessary)
 
         // Add pointer down event for the Next button
         this.nextButton.on('pointerdown', () => this.showNextText());
 
         this.nextButton.on('pointerover', () => {
-            this.nextButton.setScale(0.45); // Scale up on hover
+            this.nextButton.setScale(0.4); // Scale up on hover
         }); 
         this.nextButton.on('pointerout', () => {
-            this.nextButton.setScale(0.4); // Reset scale when not hovering
+            this.nextButton.setScale(0.35); // Reset scale when not hovering
         });
     }
 
@@ -110,7 +111,7 @@ class InfoScreen extends Phaser.Scene {
                     window.globalGameData.username = username;
 
                     this.shutdown(); // Clean up input fields
-                    this.scene.start('MainGame'); // Start the MainGame scene (username is now global)
+                    this.scene.start('GameInfo'); // Start the MainGame scene (username is now global)
                 } else {
                     alert('Please enter a username.');
                 }
@@ -128,7 +129,7 @@ class InfoScreen extends Phaser.Scene {
         this.usernameInput.style.left = `${this.game.config.width / 2 - 150}px`;
         this.usernameInput.style.width = '300px';
         this.usernameInput.style.height = '40px';
-        this.usernameInput.style.fontSize = '20px';
+        this.usernameInput.style.fontSize = '16px';
         this.usernameInput.style.fontFamily = "'Press Start 2P', cursive"; // Matching the game's font
         this.usernameInput.style.color = '#ffffff'; // White text
         this.usernameInput.style.backgroundColor = '#333333'; // Dark background

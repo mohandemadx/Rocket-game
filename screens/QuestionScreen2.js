@@ -1,40 +1,40 @@
-class QuestionScreen extends Phaser.Scene {
+class QuestionScreen2 extends Phaser.Scene {
     constructor() {
-        super({ key: 'QuestionScreen' });
+        super({ key: 'QuestionScreen2' });
         this.hasSelected = false; // Track if the user has already selected an option
         this.questionIndex = -1;
         this.questions = [
-            "What is deforestation?",
-            "Why are forests important for the environment?", 
-            "How does deforestation contribute to climate change?",
-            "What are some of the consequences of climate change?",
-            "How can we help to reduce deforestation and its impact on climate change?"
+            "What is pollution?",
+            "What are the main types of pollution?", 
+            "How does air pollution affect human health?",
+            "What are the consequences of water pollution?",
+            "How can we reduce pollution and protect the environment?"
         ];
         this.answersList = [
             [
-                { text: 'A: The process of planting new trees in a cleared area.', correct: false },
-                { text: 'B: The cutting down of trees in a large area.', correct: true },
-                { text: 'C: The natural death of trees in a forest.', correct: false },
+                { text: 'A: The process of cleaning up the environment.', correct: false },
+                { text: 'B: The introduction of harmful substances into the environment.', correct: true },
+                { text: 'C: The natural process of decomposition.', correct: false },
             ], 
             [
-                { text: 'A: Forests provide habitats for animals.', correct: false },
-                { text: 'B: Forests help to absorb carbon dioxide from the atmosphere.', correct: false },
-                { text: 'C: Both A and B.', correct: true },
+                { text: 'A: Air, water, and land pollution.', correct: false },
+                { text: 'B: Noise, light, and visual pollution.', correct: false },
+                { text: 'C: All of the above.', correct: true },
             ],
             [
-                { text: 'A: By releasing stored carbon dioxide into the atmosphere.', correct: true },
-                { text: "B: By reducing the Earth's ability to reflect sunlight.", correct: false },
-                { text: 'C: By increasing the amount of water vapor in the atmosphere.', correct: false },
+                { text: 'A: It can cause respiratory problems, heart disease, and cancer.', correct: true },
+                { text: "B: It can lead to improved mental health and increased energy levels.", correct: false },
+                { text: 'C: It has no significant impact on human health.', correct: false },
             ],
             [
-                { text: 'A: Rising sea levels, more extreme weather events, and loss of biodiversity.', correct: true },
-                { text: "B: Increased rainfall, colder temperatures, and healthier ecosystems.", correct: false },
-                { text: 'C: Fewer natural disasters, cleaner air, and longer growing seasons.', correct: false },
+                { text: 'A: Contaminated drinking water, harm to aquatic life, and destruction of ecosystems.', correct: true },
+                { text: "B: Cleaner water, healthier fish populations, and improved water quality.", correct: false },
+                { text: 'C: Increased rainfall, higher water levels, and more flooding.', correct: false },
             ],
             [
-                { text: 'A: By using less paper and wood products.', correct: false },
-                { text: "B: By supporting sustainable forestry practices.", correct: false },
-                { text: 'C: Both A and B.', correct: true },
+                { text: 'A: By recycling, conserving energy, and reducing waste.', correct: true },
+                { text: "B: By using more harmful chemicals and polluting industries.", correct: false },
+                { text: 'C: By ignoring environmental concerns and focusing on economic growth.', correct: false },
             ]
         ];
     }
@@ -45,6 +45,7 @@ class QuestionScreen extends Phaser.Scene {
     }
 
     create() {
+        this.username = window.globalGameData.username;
         this.setupQuestionIndex();
         this.hasSelected = false; // reset
         this.createBackground();
@@ -125,12 +126,21 @@ class QuestionScreen extends Phaser.Scene {
         // Add pointer down event for Next button
         this.nextButton.on('pointerdown', () => {
             if(window.globalGameData.level <= 5){
-                this.scene.start('MainGame');
+                this.scene.start('MainGame2');
             }
             else{
                 window.globalGameData.level = 1;
-                // this.scene.start('GameInfo'); ----> Pollution Info MSG
-                this.scene.start('MainGame2');
+                this.time.delayedCall(200, async () => {
+                    // Fetch the highscore for the current user
+                    const highscore = await getHighscore(this.username);
+            
+                    // Check if the current score is higher than the stored highscore
+                    if (window.globalGameData.score > highscore) {
+                        // Save the new highscore for this user
+                        await saveScore(this.username, undefined, undefined, window.globalGameData.score);
+                    }
+                });
+                this.scene.start('FinalScreen');
             }
             
         });
@@ -196,4 +206,4 @@ class QuestionScreen extends Phaser.Scene {
     }
 }
 
-export default QuestionScreen;
+export default QuestionScreen2;

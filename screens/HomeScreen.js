@@ -35,7 +35,7 @@ class HomeScreen extends Phaser.Scene {
     }
 
     startGame() {
-        this.scene.start('InfoScreen');
+        this.scene.start('MainGame2');
     }
 
     onButtonHover(button, scale) {

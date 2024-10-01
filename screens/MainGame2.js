@@ -1,8 +1,8 @@
 import { saveScore, getHighscore } from '../firebase/firebase.js';
 
-class MainGame extends Phaser.Scene {
+class MainGame2 extends Phaser.Scene {
     constructor() {
-        super({ key: 'MainGame' });
+        super({ key: 'MainGame2' });
         this.lives = 3; // Initialize lives
         this.LEVEL_NUM = 5 //NUM OF LEVELS
         this.isPaused = false; // Initialize pause state
@@ -12,8 +12,9 @@ class MainGame extends Phaser.Scene {
         // Load assets
         this.load.image('spaceship', 'assets/spaceship.png');  
         this.load.image('gameBackground', 'assets/background.jpg');  
-        this.load.image('target', 'assets/tree.png');
-        this.load.image('projectile', 'assets/water.png');
+        this.load.image('target3', 'assets/bottle.png');
+        this.load.image('target2', 'assets/apple.png');
+        this.load.image('projectile2', 'assets/bullet.png');
         this.load.image('pauseButton', 'assets/pause.png');
         this.load.image('heart', 'assets/heart.png');
     }
@@ -69,7 +70,7 @@ class MainGame extends Phaser.Scene {
     createGround() {
         this.ground = this.physics.add.staticGroup();
         const groundWidth = this.game.config.width;
-        this.ground.create(groundWidth / 2, this.game.config.height - 10, 'target')
+        this.ground.create(groundWidth / 2, this.game.config.height - 10, 'target3')
             .setScale(groundWidth / 50, 1)
             .refreshBody()
             .setAlpha(0); // Make ground invisible
@@ -93,14 +94,24 @@ class MainGame extends Phaser.Scene {
     }
 
     spawnTarget() {
-        const target = this.targets.create(
-            Phaser.Math.Between(80, this.game.config.width), // Random X position
-            Phaser.Math.Between(0, 50), // Random Y position
-            'target'
-        );
+        let target = null;
+        if(Phaser.Math.Between(1,2) === 1){
+                target = this.targets.create(
+                Phaser.Math.Between(80, this.game.config.width), // Random X position
+                Phaser.Math.Between(0, 50), // Random Y position
+                'target3'
+            );
+        }
+        else{
+                target = this.targets.create(
+                Phaser.Math.Between(80, this.game.config.width), // Random X position
+                Phaser.Math.Between(0, 50), // Random Y position
+                'target2'
+            );
+        }
 
         const targetType = Phaser.Math.Between(1, 3);
-        target.setDisplaySize(100 * targetType, 100 * targetType); // Set size based on type
+        target.setDisplaySize(50 * targetType, 50 * targetType); // Set size based on type
         target.setVelocityY(50 / targetType); // Set speed based on type
         target.health = targetType; // Set health based on type
         target.body.immovable = true;
@@ -217,8 +228,8 @@ class MainGame extends Phaser.Scene {
     }
 
     shoot() {
-        const projectile = this.physics.add.sprite(this.spaceship.x, this.spaceship.y - 20, 'projectile');
-        projectile.setScale(0.25);
+        const projectile = this.physics.add.sprite(this.spaceship.x, this.spaceship.y - 20, 'projectile2');
+        projectile.setScale(0.65);
         projectile.setVelocityY(-400); // Move projectile upwards
         this.physics.add.collider(projectile, this.targets, this.hitTarget, null, this);
     }
@@ -249,12 +260,15 @@ class MainGame extends Phaser.Scene {
         if(window.globalGameData.level <= this.LEVEL_NUM){
             window.globalGameData.level++;
             // Transition to the next level or display a completion screen
-            this.scene.start('QuestionScreen');
+            this.scene.start('QuestionScreen2');
+        }
+        else{
+            this.scene.start('FinalScreen');
         }
     }
 
     flashTarget(target) {
-        target.setTint(0x14B5FF); // Change color to blue on hit
+        target.setTint(0xFF0000); // Change color to red on hit
         this.time.delayedCall(100, () => {
             target.clearTint(); // Clear tint after a short delay
         });
@@ -289,16 +303,16 @@ class MainGame extends Phaser.Scene {
     async endGame() {
         this.time.delayedCall(200, async () => {
             // Fetch the highscore for the current user
-            const highscore = await getHighscore(this.username);
+            const highscore = await getHighscore(window.globalGameData.username);
     
             // Check if the current score is higher than the stored highscore
             if (window.globalGameData.score > highscore) {
                 // Save the new highscore for this user
-                await saveScore(this.username, undefined, undefined, window.globalGameData.score);
+                await saveScore(window.globalGameData.username, undefined, undefined, window.globalGameData.score);
             }
         });
         // Go to the Game Over screen and pass the score and username
-        this.scene.start('GameOverScreen');
+        this.scene.start('GameOverScreen2');
     }
     
     updateScore() {
@@ -321,4 +335,4 @@ class MainGame extends Phaser.Scene {
     }
 }
 
-export default MainGame; // Exporting MainGame class
+export default MainGame2; // Exporting MainGame class
