@@ -21,7 +21,7 @@ class MainGame extends Phaser.Scene {
     create() {
         this.username = window.globalGameData.username;
 
-        this.targetNumber = window.globalGameData.level; // Total number of targets
+        this.targetNumber = window.globalGameData.level*7; // Total number of targets
         this.targetsRemaining = this.targetNumber;
 
         this.resetGame(); // Reset game state
@@ -245,10 +245,11 @@ class MainGame extends Phaser.Scene {
         }
     }
 
-    levelComplete() {
+    async levelComplete() {
         if(window.globalGameData.level <= this.LEVEL_NUM){
             window.globalGameData.level++;
-            // Transition to the next level or display a completion screen
+            await saveScore(this.username, window.globalGameData.score, window.globalGameData.le, window.globalGameData.score);
+
             this.scene.start('QuestionScreen');
         }
     }
@@ -287,25 +288,24 @@ class MainGame extends Phaser.Scene {
     }
 
     async endGame() {
-        this.time.delayedCall(200, async () => {
-            // Fetch the highscore for the current user
+        try {
             const highscore = await getHighscore(this.username);
-    
-            // Check if the current score is higher than the stored highscore
+        
             if (window.globalGameData.score > highscore) {
-                // Save the new highscore for this user
-                await saveScore(this.username, undefined, undefined, window.globalGameData.score);
+                
+                await saveScore(this.username, window.globalGameData.score, window.globalGameData.le, window.globalGameData.score);
+                
             }
-        });
-        // Go to the Game Over screen and pass the score and username
-        this.scene.start('GameOverScreen');
+            this.scene.start('GameOverScreen');
+        } catch (error) {
+            console.error('Error during endGame processing:', error);
+        }
     }
+    
     
     updateScore() {
         window.globalGameData.score++;
         this.scoreText.setText('Score: ' + window.globalGameData.score); // Update score display
-        
-        saveScore(this.username, window.globalGameData.score, window.globalGameData.level, undefined);
     }
 
     update() {

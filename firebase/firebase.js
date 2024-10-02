@@ -43,7 +43,11 @@ async function saveScore(username, score, level, highscore) {
     // Handle the case where there's no existing data
     const newScore = score !== undefined ? score : existingData?.score || 0;
     const newLevel = level !== undefined ? level : existingData?.level || 1;
-    const newHighscore = highscore !== undefined ? highscore : existingData?.highscore || 0;
+    
+    // Update highscore only if the new score is higher than the existing highscore
+    const newHighscore = highscore !== undefined
+        ? Math.max(highscore, existingData?.highscore || 0)
+        : existingData?.highscore || 0;
 
     // Update the data (or create new if it doesn't exist)
     try {
@@ -51,11 +55,11 @@ async function saveScore(username, score, level, highscore) {
             username: username,
             score: newScore,
             level: newLevel,
-            highscore: newHighscore,
+            highscore: newHighscore, // Save the new highscore only if it's higher
         });
-
+        console.log('Score saved successfully');
     } catch (error) {
-        
+        console.error('Error saving score:', error);
     }
 }
 
@@ -71,31 +75,29 @@ async function getHighscore(username) {
     }
 }
 
-// Function to get all high scores and return the highest score along with the username
-async function getHighestScoreWithUsername() {
-    const scoresRef = ref(database, 'scores'); // Reference to the scores path
+async function getTop5Scores() {
+    const scoresRef = ref(database, 'scores');
     try {
         const snapshot = await get(scoresRef);
         if (snapshot.exists()) {
-            const scores = snapshot.val(); // Get all scores
-            let highestScore = 0; // Initialize variable to store the highest score
-            let highestUsername = ''; // Initialize variable to store the username with the highest score
-
-            // Iterate through the scores
-            for (const username in scores) {
-                if (scores[username].highscore > highestScore) {
-                    highestScore = scores[username].highscore; // Update highest score if found
-                    highestUsername = username; // Update the username with the highest score
-                }
-            }
-            return { highestScore, highestUsername }; // Return both highest score and username
+            const scores = snapshot.val();
+            // Convert the object of scores into an array
+            const scoreArray = Object.values(scores);
+            
+            // Sort the scores by the highscore in descending order
+            scoreArray.sort((a, b) => b.highscore - a.highscore);
+            
+            // Return the top 5 scores
+            return scoreArray.slice(0, 5);
         } else {
-            return null;
+            console.log('No scores found');
+            return [];
         }
     } catch (error) {
-        return null;
+        console.error('Error fetching top scores:', error);
+        return [];
     }
 }
 
 // Exporting the functions for use in other files
-export { saveScore, getScore, getHighscore, getHighestScoreWithUsername };
+export { saveScore, getScore, getHighscore,  getTop5Scores};

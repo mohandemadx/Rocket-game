@@ -111,7 +111,7 @@ class InfoScreen extends Phaser.Scene {
                     window.globalGameData.username = username;
 
                     this.shutdown(); // Clean up input fields
-                    this.scene.start('GameInfo'); // Start the MainGame scene (username is now global)
+                    this.scene.start('ScoreboardScreen'); // Start the MainGame scene (username is now global)
                 } else {
                     alert('Please enter a username.');
                 }

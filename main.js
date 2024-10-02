@@ -8,6 +8,7 @@ import QuestionScreen2 from './screens/QuestionScreen2.js';
 import GameOverScreen2 from './screens/GameOverScreen2.js';
 import FinalScreen from './screens/FinalScreen.js';
 import GameInfo from './screens/GameInfo.js';
+import ScoreboardScreen from './screens/ScoreboardScreen.js';
 
 window.globalGameData = {
     username: '',
@@ -22,7 +23,8 @@ const config = {
     backgroundColor: '#000',
     scene: [HomeScreen, InfoScreen, MainGame, GameOverScreen,
          QuestionScreen, GameInfo, MainGame2,
-          QuestionScreen2, GameOverScreen2, FinalScreen], // HomeScreen should be listed first
+          QuestionScreen2, GameOverScreen2, FinalScreen,
+        ScoreboardScreen], 
     physics: {
         default: 'arcade',
         arcade: {

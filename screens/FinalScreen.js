@@ -7,8 +7,8 @@ class FinalScreen extends Phaser.Scene {
 
     preload() {
         // Load button assets
-        this.load.image('restartButton', 'assets/restart.png'); // Add your asset path
-        this.load.image('homeButton', 'assets/home.png'); // Add your asset path
+        this.load.image('homeButton', 'assets/home.png'); 
+        this.load.image('scoreboardButton', 'assets/score.png'); 
     }
 
     create() {
@@ -102,17 +102,29 @@ class FinalScreen extends Phaser.Scene {
     createButtons() {
         const windowX = this.game.config.width / 2;
         const windowY = this.game.config.height / 2;
-        const windowHeight = 400;
-
-
+        const buttonSpacing = 150; // Adjust the spacing between buttons as needed
+    
         // Home Button
-        this.homeButton = this.add.image(windowX , windowY + 115, 'homeButton')
+        this.homeButton = this.add.image(windowX - buttonSpacing / 2, windowY + 115, 'homeButton')
             .setOrigin(0.5, 0)
             .setInteractive()
             .setDisplaySize(200, 100) // Scale it down
             .on('pointerdown', () => this.goToHomeScreen())
             .on('pointerover', () => this.homeButton.setTint(0xcccccc)) // Hover effect
             .on('pointerout', () => this.homeButton.clearTint()); // Reset color
+    
+        // Scoreboard Button
+        this.scoreboardButton = this.add.image(windowX + buttonSpacing / 2, windowY + 135, 'scoreboardButton')
+            .setOrigin(0.5, 0)
+            .setInteractive()
+            .setDisplaySize(150, 50) // Scale it down
+            .on('pointerdown', () => this.goToScoreboardScreen())
+            .on('pointerover', () => this.scoreboardButton.setTint(0xcccccc)) // Hover effect
+            .on('pointerout', () => this.scoreboardButton.clearTint()); // Reset color
+    }
+    
+    goToScoreboardScreen() {
+        this.scene.start('ScoreboardScreen'); // Navigate to the Scoreboard screen
     }
 
     goToHomeScreen() {
