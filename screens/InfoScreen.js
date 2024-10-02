@@ -107,11 +107,17 @@ class InfoScreen extends Phaser.Scene {
             this.nextButton.on('pointerdown', () => {
                 const username = this.usernameInput.value;
                 if (username) {
-                    // Save the username to the global variable
-                    window.globalGameData.username = username;
+                    // Check if the username contains only letters and numbers
+                    if (!/^[a-zA-Z0-9]*$/.test(username)) {
+                        alert('Username must contain only letters and numbers.');
+                    }
+                    else{
+                        // Save the username to the global variable
+                        window.globalGameData.username = username;
 
-                    this.shutdown(); // Clean up input fields
-                    this.scene.start('GameInfo'); // Start the MainGame scene (username is now global)
+                        this.shutdown(); // Clean up input fields
+                        this.scene.start('GameInfo'); // Start the MainGame scene (username is now global)
+                    }
                 } else {
                     alert('Please enter a username.');
                 }
