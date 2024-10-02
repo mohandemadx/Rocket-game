@@ -6,6 +6,7 @@ class MainGame2 extends Phaser.Scene {
         this.lives = 3; // Initialize lives
         this.LEVEL_NUM = 5 //NUM OF LEVELS
         this.isPaused = false; // Initialize pause state
+        this.showInfo = true;
     }
 
     preload() {
@@ -49,6 +50,8 @@ class MainGame2 extends Phaser.Scene {
         // SHORTCUT TO PAUSE
         this.input.keyboard.on('keydown-P', this.togglePause, this);
 
+        // Create the info message on top of the game
+        if(this.showInfo) this.createInfoMessage();
     }
 
     resetGame() {
@@ -154,7 +157,7 @@ class MainGame2 extends Phaser.Scene {
         });
     }
     
-    
+
     updateLives(lives) {
         this.livesContainer.removeAll(true); // Clear existing hearts
         for (let i = 0; i < lives; i++) {
@@ -162,7 +165,56 @@ class MainGame2 extends Phaser.Scene {
             this.livesContainer.add(heart); // Add heart to the container
         }
     }
+
+    createInfoMessage() {
+        // Create a semi-transparent overlay and pause the game
+        this.togglePause();
+        const overlay = this.add.rectangle(0, 0, this.game.config.width, this.game.config.height, 0x000000, 0.95).setOrigin(0, 0).setInteractive().setDepth(11);
     
+        // Define the header text
+        const headerText = "Pollution Overview";
+
+        // Create the header text with larger font size
+        const headerBox = this.add.text(this.game.config.width / 2, this.game.config.height / 2 - 185, headerText, {
+            fontSize: '28px', // Set a larger font size for the header
+            color: '#FF0000', // You can adjust the color to make it stand out
+            align: 'center',
+            fontFamily: "'Press Start 2P', cursive",
+            stroke: '#FFFFFF', // Optional: add a stroke for better visibility
+            strokeThickness: 3,
+        }).setOrigin(0.5, 0.5).setDepth(12);
+
+        // Define the main info text
+        const infoText = "Pollution is the introduction of harmful substances into the environment. It can take many forms, including air pollution, water pollution, and land pollution. Air pollution is caused by the release of pollutants into the atmosphere, such as from vehicle exhaust, industrial emissions, and burning fossil fuels. Water pollution occurs when harmful substances contaminate water sources, such as rivers, lakes, and oceans. Land pollution results from the disposal of waste materials on the land, including litter, chemicals, and hazardous materials. Pollution has a detrimental impact on human health, ecosystems, and the overall quality of life.";
+
+        // Create the info text with adjusted position
+        const infoBox = this.add.text(this.game.config.width / 2, this.game.config.height / 2 + 20, infoText, {
+            fontSize: '24px',
+            color: '#ffffff',
+            align: 'center',
+            lineSpacing: 3,
+            wordWrap: { width: 800, useAdvancedWrap: true },
+            backgroundColor: '#333',
+            padding: { left: 10, right: 10, top: 10, bottom: 10 }
+        }).setOrigin(0.5, 0.5).setDepth(12);
+    
+        // Handle clicking to close the info message
+        overlay.on('pointerdown', () => this.startGame(overlay, infoBox, headerBox));
+    
+        // Allow closing the message with the Enter key
+        this.input.keyboard.on('keydown-ENTER', () => this.startGame(overlay, infoBox, headerBox));
+    }    
+    
+    startGame(overlay, infoBox, headerBox) {
+        // Ensure the overlay and info box exist before attempting to destroy them
+        if (overlay) overlay.destroy();
+        if (infoBox) infoBox.destroy();
+        if (headerBox) headerBox.destroy();
+        this.showInfo = false;
+        this.togglePause();
+        // Remove the event listeners to prevent any potential issues
+        this.input.keyboard.off('keydown-ENTER');
+    }
 
     setupControls() {
         // Enable input for keyboard controls

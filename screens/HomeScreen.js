@@ -19,12 +19,13 @@ class HomeScreen extends Phaser.Scene {
     }
 
     setupBackground() {
-        // BACKGROUND
+        // Background setup
         const background = this.add.image(0, 0, 'background').setOrigin(0, 0);
         background.setDisplaySize(this.game.config.width, this.game.config.height); 
     }
 
     createStartButton() {
+        // Start button setup
         const startButton = this.add.image(this.game.config.width / 2, this.game.config.height - 100, 'startButton').setInteractive();
         startButton.setScale(0.5);
 
@@ -39,7 +40,7 @@ class HomeScreen extends Phaser.Scene {
     }
 
     onButtonHover(button, scale) {
-        button.setScale(scale); // Adjust the scale of the button
+        button.setScale(scale); // Adjust button scale when hovered
     }
 }
 

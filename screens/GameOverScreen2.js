@@ -9,6 +9,7 @@ class GameOverScreen2 extends Phaser.Scene {
         // Load button assets
         this.load.image('restartButton', 'assets/restart.png'); // Add your asset path
         this.load.image('homeButton', 'assets/home.png'); // Add your asset path
+        this.load.image('scoreboardButton', 'assets/score.png');
     }
 
     create() {
@@ -72,34 +73,46 @@ class GameOverScreen2 extends Phaser.Scene {
         }).setOrigin(0.5, 0.5);
     }
     
-
     createButtons() {
         const windowX = this.game.config.width / 2;
         const windowY = this.game.config.height / 2;
-        const windowHeight = 400;
-
+        const buttonSpacing = 170; // Adjust the spacing between buttons
+    
         // Restart Button
-        this.restartButton = this.add.image(windowX - 120, windowY + 60, 'restartButton')
+        this.restartButton = this.add.image(windowX - buttonSpacing, windowY + 60, 'restartButton')
             .setOrigin(0.5, 0)
             .setInteractive()
             .setDisplaySize(200, 100) // Scale it down
             .on('pointerdown', () => this.restartGame())
             .on('pointerover', () => this.restartButton.setTint(0xcccccc)) // Hover effect
             .on('pointerout', () => this.restartButton.clearTint()); // Reset color
-
+    
         // Home Button
-        this.homeButton = this.add.image(windowX + 120, windowY + 60, 'homeButton')
+        this.homeButton = this.add.image(windowX, windowY + 60, 'homeButton')
             .setOrigin(0.5, 0)
             .setInteractive()
             .setDisplaySize(200, 100) // Scale it down
             .on('pointerdown', () => this.goToHomeScreen())
             .on('pointerover', () => this.homeButton.setTint(0xcccccc)) // Hover effect
             .on('pointerout', () => this.homeButton.clearTint()); // Reset color
+    
+        // Scoreboard Button
+        this.scoreboardButton = this.add.image(windowX + buttonSpacing, windowY + 80, 'scoreboardButton')
+            .setOrigin(0.5, 0)
+            .setInteractive()
+            .setDisplaySize(150, 50) // Scale it down
+            .on('pointerdown', () => this.goToScoreboardScreen())
+            .on('pointerover', () => this.scoreboardButton.setTint(0xcccccc)) // Hover effect
+            .on('pointerout', () => this.scoreboardButton.clearTint()); // Reset color
     }
 
     restartGame() {
         window.globalGameData.score = 0;
         this.scene.start('MainGame2');  
+    }
+
+    goToScoreboardScreen() {
+        this.scene.start('ScoreboardScreen', { previousScreen: this.scene.key }); // Navigate to the Scoreboard screen
     }
 
     goToHomeScreen() {

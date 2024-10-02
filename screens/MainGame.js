@@ -6,6 +6,7 @@ class MainGame extends Phaser.Scene {
         this.lives = 3; // Initialize lives
         this.LEVEL_NUM = 5 //NUM OF LEVELS
         this.isPaused = false; // Initialize pause state
+        this.showInfo = true;
     }
 
     preload() {
@@ -48,6 +49,8 @@ class MainGame extends Phaser.Scene {
         // SHORTCUT TO PAUSE
         this.input.keyboard.on('keydown-P', this.togglePause, this);
 
+        // Create the info message on top of the game
+        if(this.showInfo) this.createInfoMessage();
     }
 
     resetGame() {
@@ -143,15 +146,13 @@ class MainGame extends Phaser.Scene {
         });
     }
     
-    
     updateLives(lives) {
         this.livesContainer.removeAll(true); // Clear existing hearts
         for (let i = 0; i < lives; i++) {
             const heart = this.add.image(i * 40 +20, 5, 'heart').setOrigin(0.5, 0.5).setScale(0.2); // Adjust the size as needed
             this.livesContainer.add(heart); // Add heart to the container
         }
-    }
-    
+    }   
 
     setupControls() {
         // Enable input for keyboard controls
@@ -248,7 +249,7 @@ class MainGame extends Phaser.Scene {
     async levelComplete() {
         if(window.globalGameData.level <= this.LEVEL_NUM){
             window.globalGameData.level++;
-            await saveScore(this.username, window.globalGameData.score, window.globalGameData.le, window.globalGameData.score);
+            await saveScore(this.username, window.globalGameData.score, window.globalGameData.level, window.globalGameData.score);
 
             this.scene.start('QuestionScreen');
         }
@@ -301,13 +302,62 @@ class MainGame extends Phaser.Scene {
             console.error('Error during endGame processing:', error);
         }
     }
-    
-    
+     
     updateScore() {
         window.globalGameData.score++;
         this.scoreText.setText('Score: ' + window.globalGameData.score); // Update score display
     }
+    
+    createInfoMessage() {
+        // Create a semi-transparent overlay and pause the game
+        this.togglePause();
+        const overlay = this.add.rectangle(0, 0, this.game.config.width, this.game.config.height, 0x000000, 0.9).setOrigin(0, 0).setInteractive().setDepth(11);
+    
+        // Define the header text
+        const headerText = "Deforestation Overview";
 
+        // Create the header text with larger font size
+        const headerBox = this.add.text(this.game.config.width / 2, this.game.config.height / 2 - 150, headerText, {
+            fontSize: '28px', // Set a larger font size for the header
+            color: '#FF0000', // You can adjust the color to make it stand out
+            align: 'center',
+            fontFamily: "'Press Start 2P', cursive",
+            stroke: '#FFFFFF', // Optional: add a stroke for better visibility
+            strokeThickness: 3,
+        }).setOrigin(0.5, 0.5).setDepth(12);
+
+        // Define the main info text
+        const infoText = "Deforestation is the clearing of forests, primarily to make way for agriculture, logging, and development. This practice has severe consequences for the environment, including climate change, loss of biodiversity, and soil erosion. When forests are cleared, the carbon stored in their trees is released into the atmosphere, contributing to greenhouse gas emissions. Additionally, deforestation destroys habitats for countless plant and animal species, leading to a decline in biodiversity.";
+
+        // Create the info text with adjusted position
+        const infoBox = this.add.text(this.game.config.width / 2, this.game.config.height / 2 + 20, infoText, {
+            fontSize: '24px',
+            color: '#ffffff',
+            align: 'center',
+            lineSpacing: 3,
+            wordWrap: { width: 800, useAdvancedWrap: true },
+            backgroundColor: '#333',
+            padding: { left: 10, right: 10, top: 10, bottom: 10 }
+        }).setOrigin(0.5, 0.5).setDepth(12);
+    
+        // Handle clicking to close the info message
+        overlay.on('pointerdown', () => this.startGame(overlay, infoBox, headerBox));
+    
+        // Allow closing the message with the Enter key
+        this.input.keyboard.on('keydown-ENTER', () => this.startGame(overlay, infoBox, headerBox));
+    }    
+    
+    startGame(overlay, infoBox, headerBox) {
+        // Ensure the overlay and info box exist before attempting to destroy them
+        if (overlay) overlay.destroy();
+        if (infoBox) infoBox.destroy();
+        if (headerBox) headerBox.destroy();
+        this.showInfo = false;
+        this.togglePause();
+        // Remove the event listeners to prevent any potential issues
+        this.input.keyboard.off('keydown-ENTER');
+    }
+    
     update() {
         // Stop movement initially
         this.spaceship.setVelocityX(0);

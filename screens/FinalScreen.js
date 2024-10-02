@@ -124,7 +124,7 @@ class FinalScreen extends Phaser.Scene {
     }
     
     goToScoreboardScreen() {
-        this.scene.start('ScoreboardScreen'); // Navigate to the Scoreboard screen
+        this.scene.start('ScoreboardScreen', { previousScreen: this.scene.key }); // Navigate to the Scoreboard screen
     }
 
     goToHomeScreen() {

@@ -5,7 +5,10 @@ class ScoreboardScreen extends Phaser.Scene {
         super({ key: 'ScoreboardScreen' });
     }
 
-    async create() {
+    async create(data) {
+        // Store the previous screen (if any)
+        this.previousScreen = data.previousScreen || 'FinalScreen';
+        
         // Fetch the top 5 scores and player's highscore
         const top5Scores = await getTop5Scores();
         const playerHighscore = await getHighscore(window.globalGameData.username);
@@ -62,7 +65,7 @@ class ScoreboardScreen extends Phaser.Scene {
 
         // Enable 'ESC' key to return to the Final Screen
         this.input.keyboard.on('keydown-ESC', () => {
-            this.scene.start('FinalScreen'); 
+            this.scene.start(this.previousScreen); 
         });
     }
 }
